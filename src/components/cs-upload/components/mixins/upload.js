@@ -5,56 +5,58 @@ import util from '@/utils/util'
 export default {
   data() {
     return {
+      moduleName: '',
+      replaceId: 0,
+      updateToken: true,
+      tokenLoading: false,
       token: {},
       params: {},
       uploadUrl: '',
-      parentId: [],
+      parentId: -1,
       parentData: [],
       parentProps: {
         value: 'storage_id',
         label: 'name',
         children: 'children',
-        checkStrictly: true
-      }
-    }
-  },
-  watch: {
-    watchToken: {
-      handler(val) {
-        this.getToken(val)
-      },
-      immediate: true
-    }
-  },
-  mounted() {
-    this.getDirectory()
-  },
-  computed: {
-    watchToken() {
-      const { moduleName, replaceId } = this
-      return {
-        moduleName,
-        replaceId
+        checkStrictly: true,
+        emitPath: false
       }
     }
   },
   methods: {
     // 获取 Token
-    getToken(val) {
-      this.params = {}
-      if (this.replaceId) {
-        replaceUploadItem(val['replaceId'])
-          .then(res => {
-            this.token = res.data ? res.data : {}
-            this.uploadUrl = this.token['token']['upload_url']['upload_url']
-          })
-      } else {
-        getUploadToken(val['moduleName'])
-          .then(res => {
-            this.token = res.data ? res.data : {}
-            this.uploadUrl = this.token['token']['upload_url']['upload_url']
-          })
+    getToken() {
+      // 检测Token是否过期
+      const nowTime = Math.round(new Date() / 1000) + 100
+      if (this.token['expires'] !== 0 && nowTime > this.token['expires']) {
+        this.updateToken = true
       }
+
+      return new Promise(resolve => {
+        // 是否需要更新
+        if (!this.updateToken) {
+          return resolve()
+        }
+
+        this.params = {}
+        if (this.replaceId) {
+          replaceUploadItem(this.replaceId)
+            .then(res => {
+              this.token = res.data || {}
+              this.uploadUrl = this.token['token']['upload_url']['upload_url']
+              this.updateToken = false
+              resolve()
+            })
+        } else {
+          getUploadToken(this.moduleName)
+            .then(res => {
+              this.token = res.data || {}
+              this.uploadUrl = this.token['token']['upload_url']['upload_url']
+              this.updateToken = false
+              resolve()
+            })
+        }
+      })
     },
     // 删除资源
     handleRemove(file, fileList) {
@@ -102,12 +104,6 @@ export default {
         return false
       }
 
-      const nowTime = Math.round(new Date() / 1000) + 100
-      if (this.token['expires'] !== 0 && nowTime > this.token['expires']) {
-        this.$message.error('上传 Token 已过期')
-        return false
-      }
-
       // 生成上传请求参数
       let param = this.token['token']['upload_url']['param']
       param.forEach(value => {
@@ -133,8 +129,8 @@ export default {
             this.params['x:parent_id'] = 0
             if (this.storageId !== null) {
               this.params['x:parent_id'] = this.storageId
-            } else if (this.parentId.length) {
-              this.params['x:parent_id'] = this.parentId[this.parentId.length - 1]
+            } else {
+              this.params['x:parent_id'] = this.parentId <= 0 ? 0 : this.parentId
             }
           }
 
@@ -149,7 +145,7 @@ export default {
       if (this.token['token']['upload_url']['module'] === 'careyshop') {
         this.params['token'] = util.cookies.get('token')
         this.params['appkey'] = process.env.VUE_APP_KEY
-        this.params['timestamp'] = nowTime
+        this.params['timestamp'] = Math.round(new Date() / 1000) + 100
         this.params['format'] = 'json'
         this.params['method'] = 'add.upload.list'
         this.params['sign'] = util.getSign({ ...this.params })
@@ -212,33 +208,20 @@ export default {
     },
     // 获取可选目录(外部不传入storageId时启用)
     getDirectory() {
-      if (this.storageId !== null) {
+      if (this.storageId !== null || this.parentData.length > 0) {
         return
       }
 
       getStorageDirectorySelect()
         .then(res => {
-          this.parentData = res.data.list.length
-            ? util.formatDataToTree(res.data.list, 'storage_id')
-            : []
-
+          this.parentData = util.formatDataToTree(res.data.list, 'storage_id')
           this.parentData.unshift({
-            storage_id: 0,
+            storage_id: -1,
             parent_id: 0,
             name: '根目录'
           })
 
-          let default_id = res.data.default
-          do {
-            let node = res.data.list.find(item => item.storage_id === default_id)
-            if (node) {
-              default_id = node.parent_id
-              this.parentId.unshift(node.storage_id)
-            } else {
-              default_id = 0
-              this.parentId = [0]
-            }
-          } while (default_id)
+          this.parentId = res.data.default || -1
         })
     }
   }

@@ -1,5 +1,5 @@
 import setting from '@/setting'
-import menu from '@/menu'
+// import menu from '@/menu'
 
 export default {
   namespaced: true,
@@ -85,14 +85,14 @@ export default {
     async sourceDataLoad({ state, dispatch }) {
       return new Promise(async resolve => {
         // 菜单数据源持久化
-        state.sourceData = await dispatch('careyshop/db/get', {
-          dbName: 'database',
-          path: '$menu.sourceData',
-          defaultValue: [],
-          user: true
-        }, { root: true })
+        // state.sourceData = await dispatch('careyshop/db/get', {
+        //   dbName: 'database',
+        //   path: '$menu.sourceData',
+        //   defaultValue: [],
+        //   user: true
+        // }, { root: true })
         // 处理顶栏菜单、侧边菜单、功能搜索
-        menu.install(this, state.sourceData)
+        // menu.install(this, state.sourceData)
         // end
         resolve()
       })

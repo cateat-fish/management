@@ -1,15 +1,8 @@
 <template>
-  <div
-    class="cs-contentmenu-list"
-    @click="rowClick">
-    <div
-      v-for="item in menulist"
-      :key="item.value"
-      :data-value="item.value"
-      class="cs-contentmenu-item"
-      flex="cross:center main:center">
-      <cs-icon v-if="item.icon" :name="item.icon"/>
-      <div class="cs-contentmenu-item-title" flex-box="1">{{item.title}}</div>
+  <div class="cs-contentmenu-list" @click="rowClick">
+    <div v-for="item in menulist" :key="item.value" :data-value="item.value" class="cs-contentmenu-item" flex="cross:center main:center">
+      <i v-if="item.icon" :class="item.icon"/>
+      <div class="cs-ml-5" flex-box="1">{{item.title}}</div>
     </div>
   </div>
 </template>
@@ -46,9 +39,6 @@ export default {
     &:hover {
       background: #ecf5ff;
       color: #66b1ff;
-    }
-    .cs-contentmenu-item-title {
-      margin-left: 10px;
     }
   }
 }

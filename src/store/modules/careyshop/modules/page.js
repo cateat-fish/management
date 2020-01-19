@@ -25,7 +25,10 @@ export default {
      * @param {Object} context
      */
     isLoaded({ state }) {
-      if (state.value) return Promise.resolve()
+      if (state.openedLoaded) {
+        return Promise.resolve()
+      }
+
       return new Promise(resolve => {
         const timer = setInterval(() => {
           if (state.openedLoaded) {
@@ -146,6 +149,25 @@ export default {
         if (isKeepAlive(newTag)) {
           commit('keepAlivePush', tag.name)
         }
+        // 持久化
+        await dispatch('openecsdb')
+        // end
+        resolve()
+      })
+    },
+    /**
+     * @class opened
+     * @description 重排页面列表上的某一项
+     * @param {Object} context
+     * @param {Object} payload { oldIndex, newIndex } 位置信息
+     * @returns {Promise<any>}
+     */
+    openedSort({ state, commit, dispatch }, { oldIndex, newIndex }) {
+      return new Promise(async resolve => {
+        // 重排页面列表某一项
+        let page = state.opened[oldIndex]
+        state.opened.splice(oldIndex, 1)
+        state.opened.splice(newIndex, 0, page)
         // 持久化
         await dispatch('openecsdb')
         // end
@@ -434,7 +456,7 @@ export default {
      */
     init(state, routes) {
       const pool = []
-      const push = function(routes) {
+      const push = (routes) => {
         routes.forEach(route => {
           if (route.children && route.children.length > 0) {
             push(route.children)

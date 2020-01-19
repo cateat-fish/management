@@ -1,6 +1,6 @@
 import util from '@/utils/util'
 import { getMenuAuthList } from '@/api/auth/menu'
-import { loginAdminUser, logoutAdminUser } from '@/api/user/admin'
+// import { loginAdminUser, logoutAdminUser } from '@/api/user/admin'
 
 export default {
   namespaced: true,
@@ -96,7 +96,7 @@ export default {
      * @description 用户登录后从持久化数据加载一系列的设置
      * @param {Object} context
      */
-    load({ commit, dispatch }) {
+    load({ dispatch }) {
       return new Promise(async resolve => {
         // DB -> store 加载用户数据
         await dispatch('careyshop/user/load', null, { root: true })

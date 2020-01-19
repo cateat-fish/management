@@ -16,49 +16,40 @@
         prefix-icon="el-icon-search">
       </el-input>
       <el-collapse v-if="!searchMode" class="group" v-model="collapseActive">
-        <el-collapse-item v-for="(item, index) in icon" :key="index" :title="item.title" :name="index" class="class">
+        <el-collapse-item v-for="(item, index) in icon.glyphs" :key="index" :title="item.name" :name="index" class="class">
           <el-row class="class-row">
-            <el-col class="class-col" v-for="(iconName, iconIndex) in item.icon" :key="iconIndex" :span="4" @click.native="selectIcon(iconName)">
-              <i :class="'fa fa-' + iconName"></i>
+            <el-col class="class-col" v-for="(iconItem, iconIndex) in item.item" :key="iconIndex" :span="4" @click.native="selectIcon(iconItem.font_class)">
+              <i :class="'iconfont icon' + iconItem.font_class" :title="iconItem.name"/>
             </el-col>
           </el-row>
         </el-collapse-item>
       </el-collapse>
       <div v-if="searchMode" class="group">
         <div class="class" v-for="(item, index) in iconFilted" :key="index">
-          <div class="class-title">{{item.title}}</div>
+          <div class="class-title">{{item.name}}</div>
           <el-row class="class-row">
-            <el-col class="class-col" v-for="(iconName, iconIndex) in item.icon" :key="iconIndex" :span="4" @click.native="selectIcon(iconName)">
-              <i :class="'fa fa-' + iconName"></i>
+            <el-col class="class-col" v-for="(iconItem, iconIndex) in item.item" :key="iconIndex" :span="4" @click.native="selectIcon(iconItem.font_class)">
+              <i :class="'iconfont icon' + iconItem.font_class" :title="iconItem.name"/>
             </el-col>
           </el-row>
         </div>
       </div>
     </el-popover>
-    <!-- 允许用户输入 -->
+
     <el-input
       v-if="userInput"
       v-model="currentValue"
-      v-bind="bind">
-      <template v-if="value" slot="prepend">
-        <i :class="'fa fa-' + value"></i>
-      </template>
-      <el-button v-popover:pop slot="append">
-        <i class="fa fa-list"></i>
-      </el-button>
+      v-bind="bind"
+      :readonly="!userInput">
+      <i v-if="value" slot="prefix" class="el-input__icon icon-view" :class="'iconfont icon' + value"/>
+      <el-button icon="el-icon-menu" v-popover:pop slot="append"/>
     </el-input>
-    <!-- 不允许用户输入 -->
-    <el-button v-popover:pop v-if="!userInput">
-      <template v-if="value">
-        <i :class="'fa fa-' + value"></i>
-      </template>
-      {{value ? value : placeholder}}
-    </el-button>
   </span>
 </template>
 
 <script>
-import icon from './data/index'
+import icon from './libs/iconfont.json'
+
 export default {
   name: 'cs-icon-select',
   props: {
@@ -110,8 +101,7 @@ export default {
       // 搜索的文字
       searchText: '',
       // 不是搜索的时候显示的折叠面板绑定的展开数据
-      collapseActive: []
-      // collapseActive: [...Array(icon.length)].map((e, i) => i)
+      collapseActive: [0]
     }
   },
   computed: {
@@ -129,10 +119,10 @@ export default {
     },
     // 过滤后的图标
     iconFilted() {
-      return this.icon.map(iconClass => ({
-        title: iconClass.title,
-        icon: iconClass.icon.filter(icon => icon.indexOf(this.searchText) >= 0)
-      })).filter(iconClass => iconClass.icon.length > 0)
+      return this.icon.glyphs.map(iconClass => ({
+        name: iconClass.name,
+        item: iconClass.item.filter(icon => icon.font_class.indexOf(this.searchText) >= 0)
+      })).filter(iconClass => iconClass.item.length > 0)
     }
   },
   watch: {
@@ -155,6 +145,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+  .icon-view {
+    font-size: 24px;
+    line-height: 40px;
+  }
   .group {
     max-height: 400px;
     overflow-x: hidden;
@@ -171,15 +165,20 @@ export default {
       }
       .class-row {
         .class-col {
-          line-height: 40px;
           text-align: center;
           color: $color-text-sub;
+          .iconfont {
+            line-height: 40px;
+            font-size: 24px;
+          }
           &:hover {
             color: $color-text-main;
             background-color: $color-bg;
             border-radius: 4px;
-            font-size: 26px;
             box-shadow: inset 0 0 0 1px $color-border-1;
+            .iconfont {
+              font-size: 38px;
+            }
           }
         }
       }

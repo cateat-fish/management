@@ -2,14 +2,18 @@
   <el-dialog
     :visible.sync="dialogVisible"
     :append-to-body="true"
-    @close="close">
-    <div v-if="dialogVisible" class="image">
+    :show-close="false"
+    @close="close"
+    class="image">
+    <div v-if="dialogVisible">
       <el-image :src="dialogImageUrl" fit="fill" @click.native="$open(dialogImageUrl)"/>
     </div>
   </el-dialog>
 </template>
 
 <script>
+import util from '@/utils/util'
+
 export default {
   name: 'preview',
   data() {
@@ -24,23 +28,13 @@ export default {
       if (Array.isArray(image)) {
         // eslint-disable-next-line no-unused-vars
         for (let item of image) {
-          result.push(this.checkUrl(item))
+          result.push(util.checkUrl(item))
         }
       } else {
-        result.push(this.checkUrl(image))
+        result.push(util.checkUrl(image))
       }
 
       return result
-    },
-    checkUrl(url) {
-      const blob = /^(blob)[^\s]+/
-      const reg = /^((https|http|ftp|rtsp|mms)?:\/\/)[^\s]+/
-
-      if (!blob.test(url) && !reg.test(url)) {
-        return document.location.protocol + '//' + url
-      }
-
-      return url
     },
     show(image) {
       this.$nextTick(() => {
@@ -59,9 +53,17 @@ export default {
 <style scoped>
   .image {
     text-align: center;
+    line-height: 0;
   }
   .image >>> img {
     vertical-align: middle;
     cursor: pointer;
+  }
+  .image >>> .el-dialog__header {
+    display: none;
+  }
+  .image >>> .el-dialog__body {
+    padding: 10px;
+    background-color: #F5F7FA;
   }
 </style>

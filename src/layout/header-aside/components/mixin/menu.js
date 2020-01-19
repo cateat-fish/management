@@ -9,7 +9,7 @@ export default {
      */
     handleMenuSelect(index, indexPath) {
       if (!index || /^cs-menu-empty-\d+$/.test(index)) {
-        this.$message.warning('待开发...')
+        this.$message.warning('临时菜单')
       } else if (/^https:\/\/|http:\/\//.test(index)) {
         this.$open(index)
       } else {

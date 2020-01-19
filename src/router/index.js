@@ -36,7 +36,8 @@ router.beforeEach(async(to, from, next) => {
   }
 
   // 检测当前路由是否需要验证
-  if (to.matched.some(r => r.meta.auth)) {
+    if (false) {
+  // if (to.matched.some(r => r.meta.auth)) {
     if (token && token !== 'undefined') {
       next()
     } else {
@@ -48,7 +49,8 @@ router.beforeEach(async(to, from, next) => {
     }
   } else {
     // 不需要验证路由直接访问
-    if (token && to.path === '/login') {
+    if (false) {
+    // if (token && to.path === '/login') {
       next({ path: '/' })
       NProgress.done()
     } else {

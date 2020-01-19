@@ -17,6 +17,7 @@
         :default-checked-keys="checkedKeys"
         :close-on-click-modal="false"
         :show-checkbox="true"
+        style="margin-top: -15px;"
         ref="tree"/>
 
       <div slot="footer" class="dialog-footer">
@@ -35,7 +36,7 @@
 
 <script>
 import util from '@/utils/util'
-// import { getRegionSonList } from '@/api/logistics/region'
+import { getRegionSonList } from '@/api/logistics/region'
 
 export default {
   name: 'cs-storage-all',
@@ -75,9 +76,7 @@ export default {
       getRegionSonList({ region_id: this.regionId })
         .then(res => {
           const setParent = { key: 'parent_id', value: [this.regionId] }
-          this.treeData = res.data.length
-            ? util.formatDataToTree(res.data, 'region_id', 'parent_id', setParent)
-            : []
+          this.treeData = util.formatDataToTree(res.data, 'region_id', 'parent_id', setParent)
         })
         .finally(() => {
           this.loading = false

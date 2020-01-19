@@ -1,8 +1,5 @@
 <template>
-  <div
-    class="cs-layout-header-aside-group"
-    :style="styleLayoutMainGroup"
-    :class="{grayMode: grayActive}">
+  <div class="cs-layout-header-aside-group" :style="styleLayoutMainGroup" :class="{'grayMode': grayActive}">
     <!-- 半透明遮罩 -->
     <div class="cs-layout-header-aside-mask"></div>
     <!-- 主体内容 -->
@@ -19,21 +16,15 @@
         </el-alert>
       </div>
       <!-- 顶栏 -->
-      <div
-        class="cs-theme-header"
-        :style="{
-          opacity: this.searchActive ? 0.5 : 1
-        }"
-        flex-box="0"
-        flex>
-        <div class="logo-group" :style="{width: asideCollapse ? asideWidthCollapse : asideWidth}" flex-box="0">
+      <div class="cs-theme-header" :style="{'opacity': this.searchActive ? 0.5 : 1}" flex-box="0" flex>
+        <div class="logo-group" :style="{'width': asideCollapse ? asideWidthCollapse : asideWidth}" flex-box="0">
           <a target="blank" href="//www.careyshop.cn/">
             <img v-if="asideCollapse" :src="`${$publicPath}image/theme/${themeActiveSetting.name}/logo/icon-only.png`" alt="">
             <img v-else :src="`${$publicPath}image/theme/${themeActiveSetting.name}/logo/all.png`" alt="">
           </a>
         </div>
         <div class="toggle-aside-btn" @click="handleToggleAside" flex-box="0">
-          <cs-icon name="bars"/>
+          <i :class="`el-icon-s-${asideCollapse ? 'unfold' : 'fold'}`"/>
         </div>
         <cs-menu-header flex-box="1"/>
         <!-- 顶栏右侧 -->
@@ -55,8 +46,8 @@
           ref="aside"
           class="cs-theme-container-aside"
           :style="{
-            width: asideCollapse ? asideWidthCollapse : asideWidth,
-            opacity: this.searchActive ? 0.5 : 1
+            'width': asideCollapse ? asideWidthCollapse : asideWidth,
+            'opacity': this.searchActive ? 0.5 : 1
           }">
           <cs-menu-side/>
         </div>
@@ -65,9 +56,7 @@
           <!-- 搜索 -->
           <transition name="fade-scale">
             <div v-if="searchActive" class="cs-theme-container-main-layer" flex>
-              <cs-panel-search
-                ref="panelSearch"
-                @close="searchPanelClose"/>
+              <cs-panel-search ref="panelSearch" @close="searchPanelClose"/>
             </div>
           </transition>
           <!-- 内容 -->
@@ -94,7 +83,7 @@
 </template>
 
 <script>
-import csMenuSide from './components/menu-side'
+import csMenuSide from './components/menu-side/'
 import csMenuHeader from './components/menu-header'
 import csTabs from './components/tabs'
 import csHeaderFullscreen from './components/header-fullscreen'
@@ -105,6 +94,7 @@ import csHeaderUser from './components/header-user'
 import csHeaderLog from './components/header-log'
 import { mapState, mapGetters, mapActions } from 'vuex'
 import mixinSearch from './mixins/search'
+
 export default {
   name: 'cs-layout-header-aside',
   mixins: [
@@ -146,11 +136,9 @@ export default {
      * @description 最外层容器的背景图片样式
      */
     styleLayoutMainGroup() {
-      return {
-        ...this.themeActiveSetting.backgroundImage ? {
-          backgroundImage: `url('${this.$publicPath}${this.themeActiveSetting.backgroundImage}')`
-        } : {}
-      }
+      return this.themeActiveSetting.backgroundImage
+        ? { backgroundImage: `url('${this.$publicPath}${this.themeActiveSetting.backgroundImage}')` }
+        : {}
     }
   },
   created() {

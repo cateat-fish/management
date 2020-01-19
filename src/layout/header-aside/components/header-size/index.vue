@@ -1,11 +1,13 @@
 <template>
-  <el-dropdown placement="bottom" @command="handleChange">
-    <el-button class="cs-mr btn-text can-hover" type="text">
-      <cs-icon name="font" style="font-size: 16px;"/>
-    </el-button>
+  <el-dropdown placement="bottom" @command="handleChange" :show-timeout="50">
+    <el-button class="btn-text can-hover" type="text" icon="el-icon-view"/>
     <el-dropdown-menu slot="dropdown">
-      <el-dropdown-item v-for="item in options" :key="item.value" :command="item.value">
-        <cs-icon :name="iconName(item.value)" class="cs-mr-5"/>{{item.label}}
+      <el-dropdown-item
+        v-for="item in options"
+        :key="item.value"
+        :command="item.value"
+        :icon="iconName(item.value)">
+        {{item.label}}
       </el-dropdown-item>
     </el-dropdown-menu>
   </el-dropdown>
@@ -13,6 +15,7 @@
 
 <script>
 import { mapState, mapMutations, mapActions } from 'vuex'
+
 export default {
   name: 'cs-header-size',
   computed: {
@@ -42,7 +45,7 @@ export default {
       this.$message.success('操作成功')
     },
     iconName(name) {
-      return name === this.value ? 'dot-circle-o' : 'circle-o'
+      return name === this.value ? 'el-icon-check' : 'el-icon-minus'
     }
   }
 }

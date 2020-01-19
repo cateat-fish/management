@@ -2,6 +2,7 @@ import { mapState } from 'vuex'
 import menuMixin from '../mixin/menu'
 import BScroll from 'better-scroll'
 import { elMenuItem, elSubmenu } from '../libs/util.menu'
+import { menuHeader, menuAside } from '@/menu/index'
 
 export default {
   name: 'cs-layout-header-aside-menu-side',
@@ -21,8 +22,8 @@ export default {
         createElement('div', {
           attrs: { class: 'cs-layout-header-aside-menu-empty', flex: 'dir:top main:center cross:center' }
         }, [
-          createElement('cs-icon', {
-            props: { name: 'inbox' }
+          createElement('i', {
+            attrs: { class: 'el-icon-s-grid' }
           }),
           createElement('span', {
           }, '暂无侧栏菜单')
@@ -55,27 +56,40 @@ export default {
       }, 500)
     },
     // 监听路由 改变侧边菜单栏
-    '$route': {
-      handler({ matched, fullPath }) {
-        // 路由父级发生变化时菜单数据将发生改变
-        const pathRoute = matched[0].path ? matched[0].path : matched[1].path
-        if (matched.length > 0 && pathRoute !== this.matched) {
-          const _side = this.aside.find(menu => menu.path === pathRoute)
-          this.menuAside = _side && _side.children ? _side.children : []
-          this.matched = pathRoute
+    // '$route': {
+    //   handler({ matched, fullPath }) {
+    //     // 路由父级发生变化时菜单数据将发生改变
+    //     const pathRoute = matched[0].path ? matched[0].path : matched[1].path
+    //     if (matched.length > 0 && pathRoute !== this.matched) {
+    //       const _side = this.aside.find(menu => menu.path === pathRoute)
+    //       console.log(_side)
+    //       this.menuAside = _side && _side.children ? _side.children : []
+    //       this.matched = pathRoute
+    //     }
+
+    //     // 切换菜单时调整被激活菜单
+    //     const path = fullPath.slice(0, fullPath.lastIndexOf('/'))
+    //     const openeds = this.menuAside.findIndex(menu => menu.path === path)
+    //     this.openeds = openeds !== -1 ? [path] : []
+
+    //     this.active = fullPath
+    //     this.$nextTick(() => {
+    //       if (this.aside.length > 0 && this.$refs.menu) {
+    //         this.$refs.menu.activeIndex = fullPath
+    //       }
+    //     })
+    //   },
+    //   immediate: true
+    // }
+
+    '$route.matched': {
+      handler (matched) {
+        if (matched.length > 0) {
+          const _side = menuAside.filter(menu => menu.path === matched[0].path)
+          const cSide = _side.length > 0 ? _side[0].children : []
+          this.menuAside = cSide
+          // this.$store.commit('careyshop/menu/asideSet', cSide)
         }
-
-        // 切换菜单时调整被激活菜单
-        const path = fullPath.slice(0, fullPath.lastIndexOf('/'))
-        const openeds = this.menuAside.findIndex(menu => menu.path === path)
-        this.openeds = openeds !== -1 ? [path] : []
-
-        this.active = fullPath
-        this.$nextTick(() => {
-          if (this.aside.length > 0 && this.$refs.menu) {
-            this.$refs.menu.activeIndex = fullPath
-          }
-        })
       },
       immediate: true
     }
@@ -108,3 +122,4 @@ export default {
     }
   }
 }
+

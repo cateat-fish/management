@@ -6,11 +6,13 @@
       :visible.sync="visible"
       :append-to-body="true"
       :close-on-click-modal="false"
+      @open="handleOpen"
       @close="handleClose">
 
       <el-upload
         ref="upload"
         list-type="text"
+        v-loading="tokenLoading"
         :action="uploadUrl"
         :data="params"
         :multiple="multiple"
@@ -25,15 +27,15 @@
         :on-success="handleSuccess"
         :on-error="handleError"
         :on-exceed="handleExceed">
-        <i class="el-icon-upload"></i>
+        <i class="el-icon-upload"/>
         <div class="el-upload__text">将资源拖到此处，或<em>点击上传</em></div>
         <div slot="tip" class="el-upload__tip">{{uploadTip}}大小不能超过 {{this.token['file_size']}}</div>
       </el-upload>
 
       <div slot="footer" class="dialog-footer">
-        <div style="float: left">
+        <div class="cs-fl">
           <el-cascader
-            v-if="storageId === null"
+            v-if="storageId == null"
             v-model="parentId"
             :options="parentData"
             :props="parentProps"
@@ -105,12 +107,6 @@ export default {
       required: false,
       default: true
     },
-    // 指定上传模块
-    moduleName: {
-      type: String,
-      required: false,
-      default: ''
-    },
     // 是否指定资源目录
     storageId: {
       type: Number,
@@ -120,13 +116,24 @@ export default {
   },
   data() {
     return {
-      replaceId: 0,
       visible: false,
       loading: false
     }
   },
   methods: {
+    handleOpen() {
+      this.tokenLoading = true
+      this.getDirectory()
+      this.getToken().then(() => {
+        this.tokenLoading = false
+      })
+    },
     handleClose() {
+      // 替换资源后需要更换Token
+      if (this.replaceId > 0) {
+        this.updateToken = true
+      }
+
       this.replaceId = 0
       this.visible = false
       this.loading = false

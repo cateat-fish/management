@@ -16,6 +16,7 @@
         :load="loadNode"
         :show-checkbox="true"
         :lazy="true"
+        style="margin-top: -15px;"
         ref="tree"/>
 
       <div slot="footer" class="dialog-footer">
@@ -33,7 +34,7 @@
 </template>
 
 <script>
-// import { getRegionList } from '@/api/logistics/region'
+import { getRegionList } from '@/api/logistics/region'
 
 export default {
   name: 'cs-region-lazy',
@@ -65,8 +66,7 @@ export default {
     getRegionData(regionId, resolve) {
       getRegionList({ region_id: regionId })
         .then(res => {
-          const data = res.data.length ? res.data : []
-          resolve(data)
+          resolve(res.data || [])
         })
         .finally(() => {
           this.loading = false
@@ -89,5 +89,3 @@ export default {
     display: inline;
   }
 </style>
-
-

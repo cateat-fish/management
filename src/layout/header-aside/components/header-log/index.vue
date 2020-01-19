@@ -1,26 +1,17 @@
 <template>
-  <el-tooltip
-    effect="dark"
-    :content="tooltipContent"
-    placement="bottom">
-    <el-button
-      class="cs-ml-0 cs-mr btn-text can-hover"
-      type="text"
-      @click="$router.push({name: 'log'}).catch(() => {})">
-      <el-badge
-        v-if="logLength > 0"
-        :max="99"
-        :value="logLengthError"
-        :is-dot="logLengthError === 0">
-        <cs-icon :name="logLengthError === 0 ? 'dot-circle-o' : 'bug'" style="font-size: 20px"/>
+  <el-tooltip effect="dark" :content="tooltipContent" placement="bottom">
+    <el-button class="btn-text can-hover" type="text" @click="handleClick">
+      <el-badge v-if="logLength > 0" :max="99" :value="logLengthError" :is-dot="logLengthError === 0">
+        <i :class="logLengthError === 0 ? 'el-icon-aim' : 'el-icon-cpu'"/>
       </el-badge>
-      <cs-icon v-else name="dot-circle-o" style="font-size: 20px"/>
+      <i v-else class="el-icon-aim"/>
     </el-button>
   </el-tooltip>
 </template>
 
 <script>
 import { mapGetters, mapMutations } from 'vuex'
+
 export default {
   computed: {
     ...mapGetters('careyshop', {
@@ -38,7 +29,14 @@ export default {
   methods: {
     ...mapMutations('careyshop/log', [
       'clean'
-    ])
+    ]),
+    handleClick() {
+      this.$router.push({
+        name: 'log'
+      })
+        .catch(() => {
+        })
+    }
   }
 }
 </script>

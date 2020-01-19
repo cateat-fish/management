@@ -1,12 +1,16 @@
 import index from './modules/index'
-import goods from './modules/goods'
+import system from './modules/system'
+import setting from './modules/setting'
+import marketing from './modules/marketing'
 
 /**
  * 在主框架内显示
  */
 const frameIn = [
   index,
-  goods
+  system,
+  setting,
+  marketing,
 ]
 
 /**

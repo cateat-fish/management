@@ -2,6 +2,8 @@
 
 // 补丁 base
 @import '~@/assets/style/fixed/base.scss';
+// 补丁 iconfont
+@import '~@/assets/style/fixed/iconfont.scss';
 // 补丁 element
 @import '~@/assets/style/fixed/element.scss';
 // 补丁 n-progress
@@ -23,8 +25,16 @@
 // mixin等内容请在 public.scss 里书写
 
 // 文字相关
-.#{$prefix}-text-center {
+.#{$prefix}-tc {
   text-align: center;
+}
+
+.#{$prefix}-tl {
+  text-align: left;
+}
+
+.#{$prefix}-tr {
+  text-align: right;
 }
 
 // 浮动相关
@@ -33,6 +43,19 @@
 }
 .#{$prefix}-fr {
   float: right;
+}
+
+// 鼠标状态
+.#{$prefix}-cm {
+  &:hover {
+    cursor: move !important;
+  }
+}
+
+.#{$prefix}-cp {
+  &:hover {
+    cursor: pointer !important;
+  }
 }
 
 // 边距相关
