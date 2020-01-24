@@ -3,7 +3,8 @@
     <div class="cs-page-cover__logo">
       <slot/>
     </div>
-    <p class="cs-page-cover__title">{{title}} {{$version}}</p>
+    <p class="cs-page-cover__title">{{title}} </p>
+    <!-- {{$version}} -->
     <p class="cs-page-cover__sub-title cs-mt-0">{{subTitle}}</p>
     <p class="cs-page-cover__build-time">构建时间 {{$buildTime}}</p>
     <slot name="footer"/>

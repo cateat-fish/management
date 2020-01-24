@@ -10,7 +10,7 @@ const frameIn = [
   index,
   system,
   setting,
-  marketing,
+  marketing
 ]
 
 /**

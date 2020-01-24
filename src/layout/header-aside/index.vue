@@ -18,7 +18,8 @@
       <!-- 顶栏 -->
       <div class="cs-theme-header" :style="{'opacity': this.searchActive ? 0.5 : 1}" flex-box="0" flex>
         <div class="logo-group" :style="{'width': asideCollapse ? asideWidthCollapse : asideWidth}" flex-box="0">
-          <a target="blank" href="//www.careyshop.cn/">
+          <a  href="javascript:void(0)">
+            <!-- target="blank" //www.baidu.com/ -->
             <img v-if="asideCollapse" :src="`${$publicPath}image/theme/${themeActiveSetting.name}/logo/icon-only.png`" alt="">
             <img v-else :src="`${$publicPath}image/theme/${themeActiveSetting.name}/logo/all.png`" alt="">
           </a>

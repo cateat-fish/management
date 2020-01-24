@@ -1,7 +1,6 @@
 <template>
   <div>
     <el-upload
-      v-loading="tokenLoading"
       :action="uploadUrl"
       :data="params"
       :file-list="fileList"
@@ -18,18 +17,18 @@
       :on-success="handleSuccess"
       :on-error="handleError"
       :on-exceed="handleExceed">
-      <i class="el-icon-plus"/>
+      <i class="el-icon-plus"></i>
       <div slot="tip" class="el-upload__tip">{{uploadTip}}大小不能超过 {{this.token['file_size']}}</div>
     </el-upload>
 
-    <el-cascader
-      v-if="storageId == null"
+    <!-- <el-cascader
+      v-if="storageId === null"
       v-model="parentId"
       :options="parentData"
       :props="parentProps"
       filterable
       :style="`width: ${fileWidth}`">
-    </el-cascader>
+    </el-cascader> -->
   </div>
 </template>
 
@@ -40,6 +39,15 @@ export default {
   name: 'cs-upload-comp',
   mixins: [upload],
   props: {
+    // 上传地址
+    uploadUrl: {
+      type: String,
+      default: `http://127.0.0.1:3000/upload/upload2`
+    },
+    // 额外参数
+    params: {
+
+    },
     // 自定义信息
     uploadTip: {
       type: String,
@@ -88,6 +96,12 @@ export default {
       required: false,
       default: true
     },
+    // 指定上传模块
+    moduleName: {
+      type: String,
+      required: false,
+      default: ''
+    },
     // 已上传文件列表
     fileList: {
       type: Array,
@@ -106,15 +120,6 @@ export default {
       required: false,
       default: '30%'
     }
-  },
-  mounted() {
-    this.tokenLoading = true
-
-    this.getDirectory()
-    this.getToken()
-      .then(() => {
-        this.tokenLoading = false
-      })
   }
 }
 </script>

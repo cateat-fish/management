@@ -26,10 +26,10 @@ describe('cs-container-frame', () => {
     const wrapper = mount(CsContainerFrame, {
       stubs: ['cs-container'],
       propsData: {
-        src: 'https://www.careyshop.cn/'
+        src: 'https://www.baidu.com/'
       }
     })
 
-    expect(wrapper.props().src).toEqual('https://www.careyshop.cn/')
+    expect(wrapper.props().src).toEqual('https://www.baidu.com/')
   })
 })

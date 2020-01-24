@@ -1,7 +1,7 @@
 <template>
   <cs-container>
     <cs-page-cover
-      title="CareyShop Admin"
+      title=""
       sub-title="后台管理模板">
       <img src="~@/assets/image/logo@2x.png" alt="logo">
     </cs-page-cover>

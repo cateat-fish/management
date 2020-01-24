@@ -38,8 +38,6 @@ export default {
      */
     versionShow() {
       util.log.capsule('CareyShop Admin', `v${process.env.VUE_APP_VERSION}`)
-      console.log('Web https://www.careyshop.cn/')
-      console.log('Doc https://doc.careyshop.cn/')
     },
     /**
      * @description 设置是否有新的 CareyShop Admin 版本
